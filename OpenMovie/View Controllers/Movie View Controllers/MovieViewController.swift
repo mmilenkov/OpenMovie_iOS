@@ -82,5 +82,4 @@ extension MovieViewController: UICollectionViewDataSource {
         return cell
     }
     
-    
 }

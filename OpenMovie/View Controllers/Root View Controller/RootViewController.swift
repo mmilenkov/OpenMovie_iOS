@@ -8,7 +8,11 @@
 
 import UIKit
 
-class RootViewController: UIViewController {
+final class RootViewController: UIViewController {
+    
+    private enum ErrorAlertType {
+        case noSuchMovieFound
+    }
     
     var viewModel: RootViewModel? {
         didSet {
@@ -41,7 +45,7 @@ class RootViewController: UIViewController {
             case .success(let movieData):
                 self?.movieViewController.viewModel = MovieViewModel(movieData: movieData)
             case .failure(let error):
-                //Add error handling
+                self?.presentErrorAlert(of: .noSuchMovieFound)
                 print(error.localizedDescription)
             }
         }
@@ -80,7 +84,19 @@ class RootViewController: UIViewController {
     func search(title: String) {
     viewModel?.fetchMovieData(for: title)
     }
-
-
+    
+    private func presentErrorAlert(of alertType: ErrorAlertType) {
+        let title: String
+        let message: String
+        switch alertType {
+        case .noSuchMovieFound:
+            title = "Unable to find movie"
+            message = "The application was unable to find the movie you were looking for. Please check your spelling or try a different one"
+        }
+        
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .cancel))
+        present(ac, animated: true)
+    }
 }
 
