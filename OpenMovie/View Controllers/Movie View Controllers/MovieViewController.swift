@@ -43,10 +43,21 @@ class MovieViewController: UIViewController {
             actorCollection.showsVerticalScrollIndicator = false
         }
     }
-    
+    @IBOutlet var activityIndicatorView: UIActivityIndicatorView! {
+        didSet {
+            activityIndicatorView.startAnimating()
+            activityIndicatorView.hidesWhenStopped = true
+        }
+    }
+    @IBOutlet var dataViews: [UIView]! {
+        didSet {
+            for view in dataViews {
+                view.isHidden = true
+            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         setupView()
     }
     
@@ -56,6 +67,8 @@ class MovieViewController: UIViewController {
     }
     
     private func setupViewModel(with viewModel: MovieViewModel) {
+        activityIndicatorView.stopAnimating()
+        
         movieTitle.text = viewModel.title
         plot.text = viewModel.plot
         details.text = viewModel.details
@@ -64,6 +77,10 @@ class MovieViewController: UIViewController {
         rating.text = viewModel.score
         rating.settings.fillMode = .half
         actorCollection.reloadData()
+        
+        for view in dataViews {
+            view.isHidden = false
+        }
     }
 }
 

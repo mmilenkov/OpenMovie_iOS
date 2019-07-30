@@ -19,4 +19,5 @@ enum MovieService {
 enum Constants {
     static let searchTitle = "Movie"
     static let searchMessage = "Enter the name of the movie you are looking for"
+    static let movies = ["the avengers","guardians of the galaxy","guardians of the galaxy vol 2","captain america: the first avenger", "iron man", "iron man 2", "black panther","hulk", "thor"]
 }

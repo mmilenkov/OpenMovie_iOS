@@ -31,14 +31,14 @@ final class RootViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        //viewModel?.fetchMovieData(for: "guardians of the galaxy")
         setupChildControllers()
         setupView()
     }
     
     private func setupViewModel(with viewModel: RootViewModel) {
-        viewModel.fetchMovieData(for: "avengers")
+        //TODO replace with main screen
+        viewModel.fetchMovieData(for: Constants.movies[Int.random(in: 0..<Constants.movies.count)])
+        
         viewModel.didFetchMovieData = {
             [weak self] (result) in
             switch result {
