@@ -16,6 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        guard let rootViewController = window?.rootViewController?.children[0] as? RootViewController else {
+            fatalError("Something messed up")
+        }
+        let rootViewModel = RootViewModel(networkService: NetworkManager())
+        rootViewController.viewModel = rootViewModel
+        
         return true
     }
 
