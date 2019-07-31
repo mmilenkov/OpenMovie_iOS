@@ -21,16 +21,15 @@ final class RootViewController: UIViewController {
             setupViewModel(with: viewModel)
         }
     }
-    
+    var searches = [String]()
     var searchBar: UISearchBar!
-    
     private var movieViewController: MovieViewController = {
         guard let movieViewController = UIStoryboard.main.instantiateViewController(withIdentifier: MovieViewController.storyboardIdentifier) as? MovieViewController else {
             fatalError()
         }
         movieViewController.view.translatesAutoresizingMaskIntoConstraints = false
         return movieViewController
-    } ()
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +46,7 @@ final class RootViewController: UIViewController {
             switch result {
             case .success(let movieData):
                 self?.movieViewController.viewModel = MovieViewModel(movieData: movieData)
+                self?.searches.append(movieData.Title)
             case .failure(let error):
                 self?.presentErrorAlert(of: .noSuchMovieFound)
                 print(error.localizedDescription)
@@ -61,6 +61,7 @@ final class RootViewController: UIViewController {
         navigationController?.navigationBar.topItem?.titleView = searchBar
         definesPresentationContext = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchForMovie))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "undo"), style: .plain, target: self, action: #selector(backButtonPressed))
     }
     
     private func setupSearchBar() {
@@ -114,6 +115,20 @@ final class RootViewController: UIViewController {
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .cancel))
         present(ac, animated: true)
+    }
+    
+    @objc func backButtonPressed() {
+        if searches.count > 1 {
+            search(title: searches[searches.count - 2])
+            if searches.count > 2 {
+                searches.removeFirst(searches.count - 2)
+            } else {
+                searches.removeFirst()
+            }
+            print(searches)
+        } else {
+            search(title: searches[0])
+        }
     }
 }
 
