@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -250,7 +250,6 @@
 				AD31122D95A50004CA02CA29 /* Pods-OpenMovie.debug.xcconfig */,
 				EB1D5DF4CA40031828A887E6 /* Pods-OpenMovie.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

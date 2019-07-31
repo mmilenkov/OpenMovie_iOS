@@ -12,6 +12,7 @@ final class RootViewController: UIViewController {
     
     private enum ErrorAlertType {
         case noSuchMovieFound
+        case noTitleEntered
     }
     
     var viewModel: RootViewModel? {
@@ -20,6 +21,8 @@ final class RootViewController: UIViewController {
             setupViewModel(with: viewModel)
         }
     }
+    
+    var searchBar: UISearchBar!
     
     private var movieViewController: MovieViewController = {
         guard let movieViewController = UIStoryboard.main.instantiateViewController(withIdentifier: MovieViewController.storyboardIdentifier) as? MovieViewController else {
@@ -52,21 +55,32 @@ final class RootViewController: UIViewController {
     }
     
     func setupView() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(presentSearchAlertController))
         navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
         view.backgroundColor = .backgroundBase
+        setupSearchBar()
+        navigationController?.navigationBar.topItem?.titleView = searchBar
+        definesPresentationContext = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchForMovie))
     }
     
-    @objc private func presentSearchAlertController() {
-        let ac = UIAlertController(title: Constants.searchTitle, message: Constants.searchMessage, preferredStyle: .alert)
-        ac.addTextField()
-        ac.addAction(UIAlertAction(title: "Search", style: .default){
-            [weak self] _ in
-            self?.search(title: ac.textFields?[0].text ?? "")
-        })
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        
-        present(ac, animated: true)
+    private func setupSearchBar() {
+        searchBar = UISearchBar(frame: CGRect(x:0,y:0,width: 200,height:  20))
+        searchBar.barStyle = .default
+        searchBar.placeholder = Constants.searchBarPrompt
+        searchBar.searchBarStyle = .minimal
+        searchBar.target
+        searchBar.keyboardType = .default
+    }
+    
+    @objc private func searchForMovie() {
+        guard let value = searchBar.text else { return }
+        if value == "" {
+            presentErrorAlert(of: .noTitleEntered)
+            return
+        }
+        search(title: value)
+        searchBar.text = nil
+        searchBar.resignFirstResponder()
     }
     
     private func setupChildControllers() {
@@ -82,7 +96,7 @@ final class RootViewController: UIViewController {
     }
     
     func search(title: String) {
-    viewModel?.fetchMovieData(for: title)
+        viewModel?.fetchMovieData(for: title)
     }
     
     private func presentErrorAlert(of alertType: ErrorAlertType) {
@@ -92,6 +106,9 @@ final class RootViewController: UIViewController {
         case .noSuchMovieFound:
             title = "Unable to find movie"
             message = "The application was unable to find the movie you were looking for. Please check your spelling or try a different one"
+        case .noTitleEntered:
+            title = ""
+            message = "Please enter a movie name prior to clicking the search button"
         }
         
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)

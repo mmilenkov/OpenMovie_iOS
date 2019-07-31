@@ -17,6 +17,8 @@ class MovieViewController: UIViewController {
             setupViewModel(with: viewModel)
         }
     }
+    private var searchController: UISearchController!
+    
     
     @IBOutlet var rating: CosmosView!
     @IBOutlet var movieTitle: UILabel!
