@@ -46,7 +46,7 @@ final class RootViewController: UIViewController {
             switch result {
             case .success(let movieData):
                 self?.movieViewController.viewModel = MovieViewModel(movieData: movieData)
-                self?.searches.append(movieData.Title)
+                self?.storeSearch(movieData.Title)
             case .failure(let error):
                 self?.presentErrorAlert(of: .noSuchMovieFound)
                 print(error.localizedDescription)
@@ -129,6 +129,15 @@ final class RootViewController: UIViewController {
         } else {
             search(title: searches[0])
         }
+    }
+    
+    private func storeSearch(_ title: String) {
+        if(searches.contains(title)) {
+            if let index = searches.firstIndex(of: title) {
+                searches.remove(at: index)
+            }
+        }
+        searches.append(title)
     }
 }
 
